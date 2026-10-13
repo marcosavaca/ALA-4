@@ -1,6 +1,6 @@
 import { pedirDato,pedirFecha,pausa,pedirNumero } from "./entrada.ts";
 import { Tarea } from "./tipos.ts";
-import {control,resolverEdicion,resolverFecha} from "./validaciones.ts"
+import {control,resolverEdicion,resolverFecha, mantenerSiVacio} from "./validaciones.ts"
 import {imprimirtarea} from "./mostrar.ts";
 import {escribirArchivo} from "./readwrite.ts";
 
@@ -119,16 +119,25 @@ export async function verDetalleTarea(listaDeTareas: Tarea[],indice: number): Pr
         console.log("-Si deseas mantener los valores de un atributo, simplemente dejalo en blanco (no espacio) \n");
         console.log("-Si deseas dejar en blanco un atributo, escribe un espacio. \n");
         // A los atributos que pueden sar vacios se les agrega a opciones validas un espacio: " ".
-        const nuevaDescripcion= await pedirDato( "1. Descripción:\n", null, false);
-        const nuevoEstado=await pedirDato( "2. Estado ([P]endiente/[E]n curso/[T]erminada/[C]ancelada) o dejalo en blanco para mantener(no espacio) \n", ["P", "E", "T", "C",""], true);
-        const nuevaDificultad = await pedirDato( "3. Dificultad ([1]/[2]/[3]) o dejalo en blanco para mantener(no espacio) \n", ["1", "2", "3",""],true);
-        const vencimiento=await pedirFecha("4.Ingrese fecha de vencimiento (AAAA-MM-DD)\n", true);
+        let nuevoTitulo= await pedirDato( "1. Nuevo titulo:\n", null, true);
+        const nuevaDescripcion= await pedirDato( "2. Descripción:\n", null, false);
+        const nuevoEstado=await pedirDato( "3. Estado ([P]endiente/[E]n curso/[T]erminada/[C]ancelada) o dejalo en blanco para mantener(no espacio) \n", ["P", "E", "T", "C",""], true);
+        const nuevaDificultad = await pedirDato( "4. Dificultad ([1]/[2]/[3]) o dejalo en blanco para mantener(no espacio) \n", ["1", "2", "3",""],true);
+        const vencimiento=await pedirFecha("5.Ingrese fecha de vencimiento (AAAA-MM-DD)\n", true);
         //Lo mismo en tipos2.ts.
+        if(nuevoTitulo==="")
+        {
+          nuevoTitulo=listaDeTareas[indice-1].titulo;
+        }
         listaDeTareas[indice-1].editar(
+            nuevoTitulo,
             resolverEdicion(nuevaDescripcion, listaDeTareas[indice-1].descripcion),
             nuevoEstado,
-            nuevaDificultad,
-            resolverFecha(vencimiento,listaDeTareas[indice-1].fechaVencimiento)
+            listaDeTareas[indice-1].fechaCreacion,
+            listaDeTareas[indice-1].ultimaEdicion,
+            resolverFecha(vencimiento,listaDeTareas[indice-1].fechaVencimiento),
+            Number (nuevaDificultad)
+
         );
         //Escribimos nuevamente:
         await escribirArchivo(listaDeTareas);

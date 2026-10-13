@@ -19,26 +19,31 @@ export class Tarea
      this.fechaVencimiento=fechaVencimiento;
      this.dificultad=dificultad;
     }
-    editar(nuevaDescripcion: string | null, nuevoEstado: string, nuevaDificultad: string, nuevaFechaVencimiento: Date | null): void
+    //
+    editar(nuevoTitulo: string,nuevaDescripcion: string | null, nuevoEstado: string,fechaCreacion: Date | null,nuevafechaEdicion: Date | null,  nuevaFechaVencimiento: Date | null, nuevaDificultad: number ): Tarea | void
     {
-    this.descripcion = nuevaDescripcion;
-    if (nuevoEstado !== "")
-    { 
-     this.estado = nuevoEstado; 
-    }
+        if (nuevoEstado !== "" && typeof nuevaDificultad==="number")
+        {
+             nuevafechaEdicion= new Date();
+            return new Tarea(
+                nuevoTitulo,
+                nuevaDescripcion,
+                nuevoEstado,
+                fechaCreacion,
+                nuevafechaEdicion,  
+                nuevaFechaVencimiento,
+                nuevaDificultad
+            );
+        
+        }
 
-    if (nuevaDificultad !== "")
-    {
-        this.dificultad = Number(nuevaDificultad);
     }
-    this.fechaVencimiento = nuevaFechaVencimiento;
-    this.ultimaEdicion = new Date();
-
-    }
+    // funcion pura.
     coincideEstado(condicion: string | null): boolean
     {
         return condicion === null || this.estado === condicion;
     }
+    // funcion pura.
     coincideTitulo(buscar: string): boolean
     {
         return this.titulo.toLowerCase().includes(buscar.toLowerCase());    

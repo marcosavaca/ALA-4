@@ -52,3 +52,7 @@ export function resolverFecha(entrada: string, valorAnterior: Date | null): Date
     const [anio, mes, dia] = entrada.split("-").map(Number);
     return new Date(anio, mes - 1, dia);            // nueva fecha (-1 por que llega a 11 js.
 }
+
+export function mantenerSiVacio(entrada: string, valorAnterior: string): string {
+    return entrada === "" ? valorAnterior : entrada;
+}
