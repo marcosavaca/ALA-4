@@ -1,13 +1,15 @@
 import type { Tarea } from "./tipos.ts";
 
+// funcion pura
 export function control(listaDeTareas: Tarea[]): boolean {
     if (listaDeTareas.length === 0) 
     {
-        console.log("Todavia no has creado tareas  \n");
+        
         return true;
     }
     return false;
 }
+//funcion pura
 export function esvacio(valor: string| Date | null): boolean
     {
         if(valor===null || valor===undefined)
@@ -25,6 +27,7 @@ export function esvacio(valor: string| Date | null): boolean
         // si no cumple que sea nulo o stirng y espacio en blanco entonces es falso.
         return false;
     }
+    // funcion pura
 export function resolverEdicion(entrada: string, valorAnterior:string | null):string | null
     {
       // mantener
@@ -38,6 +41,8 @@ export function resolverEdicion(entrada: string, valorAnterior:string | null):st
         }
         return entrada;// valor nuevo
     }
+
+    // funcion pura:
 export function resolverFecha(entrada: string, valorAnterior: Date | null): Date | null  //Despues de pedirFecha ya esta validado, esto es para editar o convertir a Date.
 {
     if (entrada === "")
@@ -53,6 +58,28 @@ export function resolverFecha(entrada: string, valorAnterior: Date | null): Date
     return new Date(anio, mes - 1, dia);            // nueva fecha (-1 por que llega a 11 js.
 }
 
-export function mantenerSiVacio(entrada: string, valorAnterior: string): string {
-    return entrada === "" ? valorAnterior : entrada;
+//Son dos funciones iguales por que se tiene que marca error si se coloca: number | string.
+// funcion pura:
+export function mantenerActualizarString(entrada: string , valorAnterior: string): string
+{
+    if(entrada==="")
+    {
+    return valorAnterior;    
+    }
+    else
+    {
+    return entrada;
+    }
+}
+// funcion pura:
+export function mantenerActualizarEntero(entrada: string, valorAnterior: number): number| string
+{
+    if(entrada==="")
+    {
+    return valorAnterior;    
+    }
+    else
+    {
+    return entrada;
+    }
 }

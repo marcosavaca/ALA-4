@@ -9,6 +9,7 @@ export class Tarea
     ultimaEdicion: Date | null = null;
     fechaVencimiento: Date | null = null;
     dificultad: number = 0;
+    // funcion no pura:
     constructor(titulo: string,descripcion: string | null,estado: string, fechaCreacion: Date | null, ultimaEdicion: Date | null, fechaVencimiento:Date| null, dificultad: number )
     {
      this.titulo=titulo;
@@ -19,12 +20,9 @@ export class Tarea
      this.fechaVencimiento=fechaVencimiento;
      this.dificultad=dificultad;
     }
-    //
-    editar(nuevoTitulo: string,nuevaDescripcion: string | null, nuevoEstado: string,fechaCreacion: Date | null,nuevafechaEdicion: Date | null,  nuevaFechaVencimiento: Date | null, nuevaDificultad: number ): Tarea | void
+    // funcionn pura.
+    editar(nuevoTitulo: string,nuevaDescripcion: string | null, nuevoEstado: string,fechaCreacion: Date | null,nuevafechaEdicion: Date | null,  nuevaFechaVencimiento: Date | null, nuevaDificultad: number ): Tarea 
     {
-        if (nuevoEstado !== "" && typeof nuevaDificultad==="number")
-        {
-             nuevafechaEdicion= new Date();
             return new Tarea(
                 nuevoTitulo,
                 nuevaDescripcion,
@@ -33,10 +31,7 @@ export class Tarea
                 nuevafechaEdicion,  
                 nuevaFechaVencimiento,
                 nuevaDificultad
-            );
-        
-        }
-
+            );   
     }
     // funcion pura.
     coincideEstado(condicion: string | null): boolean
@@ -48,6 +43,7 @@ export class Tarea
     {
         return this.titulo.toLowerCase().includes(buscar.toLowerCase());    
     }
+    //funciion no pura:
     mostrarDetalle():void
     {
         console.log("Esta es la tarea que elegiste: \n");
@@ -61,7 +57,7 @@ export class Tarea
 
     }
 }
-
+// funcion no pura.
 function mostrarCampo(mensaje: string,valor:string | Date| null )
     {
         if(esvacio(valor))

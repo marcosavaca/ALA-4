@@ -1,12 +1,12 @@
 import fs from 'fs/promises';
 import { Tarea } from "./tipos.ts";
+// funcion pura:
 export async function CargarTareas():Promise<Tarea[]>
 {
     try 
     {
-        console.log("Cargando Tareas................. \n");
+        
         const contenido = await fs.readFile('./archivos/tasks.json', 'utf-8'); // archivos vive dentro del repo, al lado de src
-        console.log("Completado! \n");
         const tareasplanas=JSON.parse(contenido);
 
         const listaTemporal: Tarea[]=[];
@@ -28,7 +28,6 @@ export async function CargarTareas():Promise<Tarea[]>
                 );    
                 if(condicion)
                 {
-                    console.log("Tarea con datos invalidos \n");
                     continue;
                 }
                 listaTemporal.push(tareaInstancia);
@@ -43,16 +42,16 @@ export async function CargarTareas():Promise<Tarea[]>
         return [];
     }
 }
-
+// funcion pura:
 export async function escribirArchivo(listaDeTareas:Tarea[]):Promise<void> 
 {
     const contenido = JSON.stringify(listaDeTareas, null, 2);
     try 
     {
         await fs.writeFile('./archivos/tasks.json', contenido,"utf-8");
-        console.log("Archivo guardado con éxito");
+       
     } catch (error) 
     {
-        console.error("Error al escribir:", error);
+     
     }
 }

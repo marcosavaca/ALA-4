@@ -1,6 +1,7 @@
 import { pedirNumero } from "./entrada.ts"
 import { verDetalleTarea } from "./operaciones.ts";
 import type { Tarea } from "./tipos.ts";
+import {rl} from "./entrada.ts";
 
 
 export async function imprimirtarea(listaDeTareas: Tarea[],condicion: string | null,buscar:string | null): Promise<void>
@@ -66,3 +67,28 @@ export async function imprimirtarea(listaDeTareas: Tarea[],condicion: string | n
 
         await verDetalleTarea(listaDeTareas, indiceOriginal);
     }
+
+export async function pausa(mensaje: string): Promise<void> 
+{
+    await rl.question(mensaje);
+}
+
+export async function menu(): Promise<void>
+{
+    console.log("¿Que tareas deseas ver?:\n");
+    console.log("[1] Todas \n");
+    console.log("[2] Pendientes \n");
+    console.log("[3] En curso \n");
+    console.log("[4] Terminadas \n");
+    console.log("[5] Canceladas \n");
+    console.log("[0] Volver \n");
+}
+export async function menu2(): Promise<void>
+{
+    console.log("¡Hola Olivia!\n");
+    console.log("¿Que deseas hacer?:\n");
+    console.log("[1] Ver mis Tareas\n");
+    console.log("[2] Buscar una Tarea\n");
+    console.log("[3] Agregar una Tarea\n");
+    console.log("[0] Salir\n");
+}

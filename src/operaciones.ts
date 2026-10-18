@@ -1,10 +1,10 @@
-import { pedirDato,pedirFecha,pausa,pedirNumero } from "./entrada.ts";
+import { pedirDato,pedirFecha,pedirNumero } from "./entrada.ts";
 import { Tarea } from "./tipos.ts";
-import {control,resolverEdicion,resolverFecha, mantenerSiVacio} from "./validaciones.ts"
-import {imprimirtarea} from "./mostrar.ts";
+import {control,resolverEdicion,resolverFecha, mantenerActualizarString,mantenerActualizarEntero} from "./validaciones.ts"
+import {imprimirtarea,pausa,menu} from "./mostrar.ts";
 import {escribirArchivo} from "./readwrite.ts";
 
-export async function agregarTarea(listaDeTareas: Tarea[]):Promise<Tarea> 
+export async function agregarTarea():Promise<Tarea> 
     {
         console.log("Estas creando una nueva tarea.\n");
         // Si tiene opciones validas y tambien es obligatorio entonces puede ser vacio.
@@ -47,29 +47,18 @@ export async function agregarTarea(listaDeTareas: Tarea[]):Promise<Tarea>
             resolverFecha(vencimiento,null),
             Number(dificultadus) || 1
         );
-        listaDeTareas.push(nuevaTarea);
-        escribirArchivo(listaDeTareas);
-        console.log("¡Datos guardados en el archivo!.\n");
-        await pausa("Presione cualquier tecla para continuar... \n");
-
         return nuevaTarea;
     }
 
 
-
+// funcion pura:
 export async function verTareas(listaDeTareas: Tarea[]): Promise<void>
     {
         if (control(listaDeTareas))
         {
          return;
         }
-        console.log("¿Que tareas deseas ver?:\n");
-        console.log("[1] Todas \n");
-        console.log("[2] Pendientes \n");
-        console.log("[3] En curso \n");
-        console.log("[4] Terminadas \n");
-        console.log("[5] Canceladas \n");
-        console.log("[0] Volver \n");
+        await menu();
         let opcion= await pedirNumero("> \n",undefined,undefined);
         if (opcion===0)
         { 
@@ -98,7 +87,7 @@ export async function verTareas(listaDeTareas: Tarea[]): Promise<void>
                 break;
         }
     }
-
+// funcion no pura
 export async function verDetalleTarea(listaDeTareas: Tarea[],indice: number): Promise<void>
     {
         if (!listaDeTareas[indice-1]) 
@@ -125,18 +114,18 @@ export async function verDetalleTarea(listaDeTareas: Tarea[],indice: number): Pr
         const nuevaDificultad = await pedirDato( "4. Dificultad ([1]/[2]/[3]) o dejalo en blanco para mantener(no espacio) \n", ["1", "2", "3",""],true);
         const vencimiento=await pedirFecha("5.Ingrese fecha de vencimiento (AAAA-MM-DD)\n", true);
         //Lo mismo en tipos2.ts.
-        if(nuevoTitulo==="")
-        {
-          nuevoTitulo=listaDeTareas[indice-1].titulo;
-        }
-        listaDeTareas[indice-1].editar(
-            nuevoTitulo,
+        const titulo=mantenerActualizarString(nuevoTitulo,listaDeTareas[indice-1].titulo);
+        const estado=mantenerActualizarString(nuevoEstado,listaDeTareas[indice-1].estado);
+        const dificultad=mantenerActualizarEntero(nuevaDificultad,listaDeTareas[indice-1].dificultad);
+        listaDeTareas[indice-1]=listaDeTareas[indice-1].editar
+        (
+            titulo,
             resolverEdicion(nuevaDescripcion, listaDeTareas[indice-1].descripcion),
-            nuevoEstado,
+            estado,
             listaDeTareas[indice-1].fechaCreacion,
-            listaDeTareas[indice-1].ultimaEdicion,
+            new Date(),
             resolverFecha(vencimiento,listaDeTareas[indice-1].fechaVencimiento),
-            Number (nuevaDificultad)
+            Number(dificultad)
 
         );
         //Escribimos nuevamente:
@@ -145,7 +134,7 @@ export async function verDetalleTarea(listaDeTareas: Tarea[],indice: number): Pr
         await pausa("Presiona cualquier tecla para continuar ...\n");
             
     }
-
+//funcion pura
 export async function buscarTareas(listaDeTareas: Tarea[]): Promise<void>
     {
         if (control(listaDeTareas))

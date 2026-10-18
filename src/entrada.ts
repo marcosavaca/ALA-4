@@ -1,5 +1,6 @@
 import { createInterface } from "node:readline/promises";
 export const rl = createInterface({ input: process.stdin, output: process.stdout });
+//funcion pura.
 export async function pedirDato(mensaje: string, opcionesValidas: string[] | null, obligatorio:boolean): Promise<string> 
     {
         while(true) 
@@ -24,6 +25,7 @@ export async function pedirDato(mensaje: string, opcionesValidas: string[] | nul
             }
         }
     }
+    //funcion pura
 export async function pedirFecha(mensaje:string,editar:boolean | null):Promise<string>
     {
     while (true) 
@@ -68,6 +70,7 @@ export async function pedirFecha(mensaje:string,editar:boolean | null):Promise<s
         }
     }
 }
+//funcion pura.
 export async function pedirNumero(mensaje: string, min: number | undefined, max: number | undefined): Promise<number> {
     while (true) 
     {
@@ -94,10 +97,7 @@ export async function pedirNumero(mensaje: string, min: number | undefined, max:
         }
     }
 }
-export async function pausa(mensaje: string): Promise<void> 
-{
-    await rl.question(mensaje);
-}
+//funcion pura.
 export function cerrar(): void 
     {
      rl.close();
