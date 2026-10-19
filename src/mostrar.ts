@@ -32,7 +32,7 @@ export async function imprimirtarea(listaDeTareas: Tarea[],condicion: string | n
         }
 
         console.log("¿Deseas ver los detalles de alguna? \n");
-        let entrada = await pedirNumero("Introduce el numero de la tarea o 0 para volver \n",0,tareasFiltradas.length);
+        const entrada = await pedirNumero("Introduce el numero de la tarea o 0 para volver \n",0,tareasFiltradas.length);
     
         const indice = Number(entrada);
         if (indice===0)
@@ -53,25 +53,3 @@ export async function pausa(mensaje: string): Promise<void>
     await rl.question(mensaje);
 }
 //funcion no pura:
-export async function menu_mostrar(control: boolean): Promise<void>
-{
-    if(control)
-    {
-    console.log("¡Hola Olivia!\n");
-    console.log("¿Que deseas hacer?:\n");
-    console.log("[1] Ver mis Tareas\n");
-    console.log("[2] Buscar una Tarea\n");
-    console.log("[3] Agregar una Tarea\n");
-    console.log("[0] Salir\n");
-    }
-    else
-    {
-    console.log("¿Que tareas deseas ver?:\n");
-    console.log("[1] Todas \n");
-    console.log("[2] Pendientes \n");
-    console.log("[3] En curso \n");
-    console.log("[4] Terminadas \n");
-    console.log("[5] Canceladas \n");
-    console.log("[0] Volver \n");
-    }   
-}

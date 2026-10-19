@@ -1,4 +1,4 @@
-import  { Tarea,Fecha } from "./tipos.ts";
+import  { Tarea } from "./tipos.ts";
 
 // funcion pura
 export function control(listaDeTareas: Tarea[]): boolean {
@@ -134,23 +134,4 @@ for (let i=0; i<listaDeTareas.length; i++)
             }
         }    
     return tareasFiltradas;
-}
-// funcion pura:
-export function parsearTarea(item: any): Tarea | null
-{
-    // si los campos obligatorios no existen retornamos null, no existe la tarea.
-    if (typeof item.titulo !== "string" || item.titulo.trim() === "" || typeof item.dificultad !== "number")
-    {
-        return null;
-    }
-    return new Tarea(
-        // Comprobamos que los datos opcionales y que tambien se pueden dejar por defecto, esten correctos:
-        item.titulo,
-        typeof item.descripcion === "string" ? item.descripcion : null,
-        typeof item.estado === "string" ? item.estado : null,
-        item.fechaCreacion ? new Date(item.fechaCreacion) : null,
-        item.ultimaEdicion ? new Date(item.ultimaEdicion) : null,
-        item.fechaVencimiento ? new Date(item.fechaVencimiento) : null,
-        item.dificultad
-    );
 }

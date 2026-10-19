@@ -1,7 +1,6 @@
-import{cerrar,pedirNumero} from "./entrada.ts"
+import{cerrar,pedirNumero,pedirDato} from "./entrada.ts"
 import { verTareas, buscarTareas, agregarTarea } from "./operaciones.ts";
 import { Tarea } from "./tipos.ts";
-import{pausa,menu_mostrar} from "./mostrar.ts";
 import { CargarTareas, escribirArchivo } from "./readwrite.ts";
 //funcion no pura:
 async function menu(): Promise<void> 
@@ -10,7 +9,12 @@ async function menu(): Promise<void>
     let listaDeTareas: Tarea[] = await CargarTareas();
     while (!salir) 
         {
-        menu_mostrar(true);
+        console.log("¡Hola Olivia!\n");
+        console.log("¿Que deseas hacer?:\n");
+        console.log("[1] Ver mis Tareas\n");
+        console.log("[2] Buscar una Tarea\n");
+        console.log("[3] Agregar una Tarea\n");
+        console.log("[0] Salir\n");
         let opcion = await pedirNumero(">\n",undefined,undefined);
         switch (opcion) 
         {
@@ -23,7 +27,8 @@ async function menu(): Promise<void>
                 listaDeTareas.push(nuevaTarea);
                 await escribirArchivo(listaDeTareas);
                 console.log("¡Datos guardados en el archivo!.\n");
-                await pausa("Presione cualquier tecla para continuar... \n");
+                console.log("Presiona cualquier tecla para continuar ...\n");
+                const dato=await pedirDato("> \n",null,false);
             break;
             case 0: 
              salir = true; 

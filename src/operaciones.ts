@@ -1,7 +1,7 @@
 import { pedirDato,pedirFecha,pedirNumero,entradaDatosTarea } from "./entrada.ts";
 import { Tarea } from "./tipos.ts";
 import {control,resolverEdicion,resolverFecha, mantenerActualizarString,mantenerActualizarEntero} from "./validaciones.ts"
-import {imprimirtarea,pausa,menu_mostrar} from "./mostrar.ts";
+import {imprimirtarea} from "./mostrar.ts";
 import {escribirArchivo} from "./readwrite.ts";
 
 //funcion no pura
@@ -11,7 +11,7 @@ export async function agregarTarea():Promise<Tarea>
         
         const {titulous,descripcionus,estadous,vencimiento,dificultadus,fechaCreacion,ultimaEdicion}=await entradaDatosTarea();
         // ahora llamamos al constructor s
-       let nuevaTarea = new Tarea(
+       const nuevaTarea = new Tarea(
             titulous,
             descripcionus,
             estadous ||"P",
@@ -31,8 +31,14 @@ export async function verTareas(listaDeTareas: Tarea[]): Promise<void>
         {
          return;
         }
-        await menu_mostrar(false);
-        let opcion= await pedirNumero("> \n",undefined,undefined);
+        console.log("¿Que tareas deseas ver?:\n");
+        console.log("[1] Todas \n");
+        console.log("[2] Pendientes \n");
+        console.log("[3] En curso \n");
+        console.log("[4] Terminadas \n");
+        console.log("[5] Canceladas \n");
+        console.log("[0] Volver \n");
+        const opcion= await pedirNumero("> \n",undefined,undefined);
         if (opcion===0)
         { 
         return;
@@ -71,7 +77,7 @@ export async function verDetalleTarea(listaDeTareas: Tarea[],indice: number): Pr
         // En tipos2 se pondria: listaDeTareas[indice-1].mostrarDetalle();
         listaDeTareas[indice-1].mostrarDetalle();  //Ahora a cada instancia de la tarea tiene su propio comportamiento de mostrar sus atributos
         console.log("Si deseas editarla presione E o 0 para volver. \n");
-        let entrada =await pedirDato( ">  \n", ["E","0"],true);
+        const entrada =await pedirDato( ">  \n", ["E","0"],true);
         if(entrada==="0")
         {
             return;
@@ -81,7 +87,7 @@ export async function verDetalleTarea(listaDeTareas: Tarea[],indice: number): Pr
         console.log("-Si deseas mantener los valores de un atributo, simplemente dejalo en blanco (no espacio) \n");
         console.log("-Si deseas dejar en blanco un atributo, escribe un espacio. \n");
         // A los atributos que pueden sar vacios se les agrega a opciones validas un espacio: " ".
-        let nuevoTitulo= await pedirDato( "1. Nuevo titulo:\n", null, true);
+        const nuevoTitulo= await pedirDato( "1. Nuevo titulo:\n", null, true);
         const nuevaDescripcion= await pedirDato( "2. Descripción:\n", null, false);
         const nuevoEstado=await pedirDato( "3. Estado ([P]endiente/[E]n curso/[T]erminada/[C]ancelada) o dejalo en blanco para mantener(no espacio) \n", ["P", "E", "T", "C",""], true);
         const nuevaDificultad = await pedirDato( "4. Dificultad ([1]/[2]/[3]) o dejalo en blanco para mantener(no espacio) \n", ["1", "2", "3",""],true);
@@ -94,17 +100,18 @@ export async function verDetalleTarea(listaDeTareas: Tarea[],indice: number): Pr
         //Escribimos nuevamente:
         await escribirArchivo(listaDeTareas);
         console.log("¡Datos guardados!\n");
-        await pausa("Presiona cualquier tecla para continuar ...\n");
+        console.log("Presiona cualquier tecla para continuar ...\n");
+        const dato=await pedirDato("> \n",null,false);
             
     }
-//funcion pura:
+//funcion no pura:
 export async function buscarTareas(listaDeTareas: Tarea[]): Promise<void>
     {
         if (control(listaDeTareas))
         {
          return;
         }
-        let titulo= await pedirDato("Ingrese el titulo de la tarea a buscar \n",null,false);
+        const titulo= await pedirDato("Ingrese el titulo de la tarea a buscar \n",null,false);
         // La condicion es null ya que no estamos imprimiendo todas las tareas o por condicion solo buscamos:
         await imprimirtarea(listaDeTareas,null,titulo);
 

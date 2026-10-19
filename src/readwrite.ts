@@ -1,6 +1,5 @@
 import fs from 'fs/promises';
 import { Tarea } from "./tipos.ts";
-import {parsearTarea} from "./validaciones.ts";
 // funcion pura:
 export async function CargarTareas():Promise<Tarea[]>
 {
@@ -30,7 +29,7 @@ export async function CargarTareas():Promise<Tarea[]>
         return [];
     }
 }
-// funcion pura:
+// funcionn no pura:
 export async function escribirArchivo(listaDeTareas:Tarea[]):Promise<void> 
 {
     const contenido = JSON.stringify(listaDeTareas, null, 2);
@@ -42,4 +41,23 @@ export async function escribirArchivo(listaDeTareas:Tarea[]):Promise<void>
     {
      
     }
+}
+//funcion pura:
+function parsearTarea(item: any): Tarea | null
+{
+    // si los campos obligatorios no existen retornamos null, no existe la tarea.
+    if (typeof item.titulo !== "string" || item.titulo.trim() === "" || typeof item.dificultad !== "number")
+    {
+        return null;
+    }
+    return new Tarea(
+        // Comprobamos que los datos opcionales y que tambien se pueden dejar por defecto, esten correctos:
+        item.titulo,
+        typeof item.descripcion === "string" ? item.descripcion : null,
+        typeof item.estado === "string" ? item.estado : null,
+        item.fechaCreacion ? new Date(item.fechaCreacion) : null,
+        item.ultimaEdicion ? new Date(item.ultimaEdicion) : null,
+        item.fechaVencimiento ? new Date(item.fechaVencimiento) : null,
+        item.dificultad
+    );
 }

@@ -70,13 +70,3 @@ function mostrarCampo(mensaje: string,valor:string | Date| null )
         console.log(`${mensaje}: ${valor} \n`);  
         }
     }
-
-export class Fecha{
-fechaCreacion: Date | null =null;
-fechaUltimaEdicion: Date | null = null;
-cosntructor(fechaCreacion: Date | null, fechaUltimaEdicion: Date | null)
-{
-this.fechaCreacion=fechaCreacion;
-this.fechaUltimaEdicion=fechaUltimaEdicion;    
-}
-}
