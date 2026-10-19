@@ -1,6 +1,8 @@
 import { createInterface } from "node:readline/promises";
+import{validacionFecha} from "./validaciones.ts"
+import { describe } from "node:test";
 export const rl = createInterface({ input: process.stdin, output: process.stdout });
-//funcion pura.
+//funcion pura:
 export async function pedirDato(mensaje: string, opcionesValidas: string[] | null, obligatorio:boolean): Promise<string> 
     {
         while(true) 
@@ -25,7 +27,7 @@ export async function pedirDato(mensaje: string, opcionesValidas: string[] | nul
             }
         }
     }
-    //funcion pura
+    //funcion pura:
 export async function pedirFecha(mensaje:string,editar:boolean | null):Promise<string>
     {
     while (true) 
@@ -70,7 +72,7 @@ export async function pedirFecha(mensaje:string,editar:boolean | null):Promise<s
         }
     }
 }
-//funcion pura.
+//funcion pura:
 export async function pedirNumero(mensaje: string, min: number | undefined, max: number | undefined): Promise<number> {
     while (true) 
     {
@@ -97,10 +99,33 @@ export async function pedirNumero(mensaje: string, min: number | undefined, max:
         }
     }
 }
-//funcion pura.
+//funcion pura:
 export function cerrar(): void 
     {
      rl.close();
     }
 
+    //Funcion no pura:
+export async function entradaDatosTarea(): 
+Promise<{
+    titulous: string,
+    descripcionus: string | null,
+    estadous: string,
+    vencimiento: string,
+    dificultadus: string,
+    fechaCreacion: Date | null,
+    ultimaEdicion: Date | null
+}>
+{
+    let titulous=await pedirDato( "1. Título:\n", null, true);
+    let descripcionus= await pedirDato("2. Descripción:\n", null, false);
+        //Los que no pueden ser vascios y tienen valores por defecto a opciones validas se les coloca "".
+    let estadous=await pedirDato( "3. Estado ([P]endiente/[E]n curso/[T]erminada/[C]ancelada):\n", ["P", "E", "T", "C",""], true);
+    let vencimiento = await pedirFecha("4.Ingrese fecha de vencimiento (AAAA-MM-DD) o presione Enter para omitir:\n",null);
+    let dificultadus = await pedirDato( "5. Dificultad ([1]/[2]/[3]):\n", ["1", "2", "3",""],true);
+    let fechaCreacionus = await pedirDato("6.¿Desea agregar fecha de creación? [S]í / [N]o:\n", ["S", "N"], true);
+    let ultimaEdicionus = await pedirDato("7.¿Desea agregar última edición? [S]í / [N]o:\n", ["S", "N"], true);
+    const{ fechaCreacion, ultimaEdicion }=validacionFecha(fechaCreacionus,ultimaEdicionus); 
+    return{titulous,descripcionus,estadous,vencimiento,dificultadus,fechaCreacion,ultimaEdicion}
+}
 

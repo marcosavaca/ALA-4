@@ -1,34 +1,14 @@
 import { pedirNumero } from "./entrada.ts"
 import { verDetalleTarea } from "./operaciones.ts";
-import type { Tarea } from "./tipos.ts";
+import { Tarea } from "./tipos.ts";
+import {filtrarTareas} from "./validaciones.ts";
 import {rl} from "./entrada.ts";
 
-
+//funcion no pura:
 export async function imprimirtarea(listaDeTareas: Tarea[],condicion: string | null,buscar:string | null): Promise<void>
     {
-        const tareasFiltradas = [];
 
-        for (let i=0; i<listaDeTareas.length; i++) 
-        {
-            if(buscar!==null) //Si estamos buscando entonces en la variable buscar se tiene el titulo de la tarea a buscar.
-            {
-              if(buscar.trim() !== "" && listaDeTareas[i].coincideTitulo(buscar))
-                {
-                    //añadimos a la tarea filtrada.
-       
-                 tareasFiltradas.push(listaDeTareas[i]);
-                }
-            } 
-            else 
-            {
-                // Si no estamso buscando y estamos viendo todas las tareas ya sea todas(null),Pendiente,En curso, Finalizadas:
-              if(listaDeTareas[i].coincideEstado(condicion))
-                {
-                    //añadimso todas las tareas solo que cumpla la condicion o todas.
-                    tareasFiltradas.push(listaDeTareas[i]);
-                }
-            }
-        }
+        const tareasFiltradas=filtrarTareas(listaDeTareas,condicion,buscar);
         if(tareasFiltradas.length===0) 
         {
          console.log("No hay tareas relacionadas a la busqueda\n");
@@ -67,14 +47,25 @@ export async function imprimirtarea(listaDeTareas: Tarea[],condicion: string | n
 
         await verDetalleTarea(listaDeTareas, indiceOriginal);
     }
-
+// funcion no pura:
 export async function pausa(mensaje: string): Promise<void> 
 {
     await rl.question(mensaje);
 }
-
-export async function menu(): Promise<void>
+//funcion no pura:
+export async function menu_mostrar(control: boolean): Promise<void>
 {
+    if(control)
+    {
+    console.log("¡Hola Olivia!\n");
+    console.log("¿Que deseas hacer?:\n");
+    console.log("[1] Ver mis Tareas\n");
+    console.log("[2] Buscar una Tarea\n");
+    console.log("[3] Agregar una Tarea\n");
+    console.log("[0] Salir\n");
+    }
+    else
+    {
     console.log("¿Que tareas deseas ver?:\n");
     console.log("[1] Todas \n");
     console.log("[2] Pendientes \n");
@@ -82,13 +73,5 @@ export async function menu(): Promise<void>
     console.log("[4] Terminadas \n");
     console.log("[5] Canceladas \n");
     console.log("[0] Volver \n");
-}
-export async function menu2(): Promise<void>
-{
-    console.log("¡Hola Olivia!\n");
-    console.log("¿Que deseas hacer?:\n");
-    console.log("[1] Ver mis Tareas\n");
-    console.log("[2] Buscar una Tarea\n");
-    console.log("[3] Agregar una Tarea\n");
-    console.log("[0] Salir\n");
+    }   
 }

@@ -1,49 +1,22 @@
-import { pedirDato,pedirFecha,pedirNumero } from "./entrada.ts";
+import { pedirDato,pedirFecha,pedirNumero,entradaDatosTarea } from "./entrada.ts";
 import { Tarea } from "./tipos.ts";
 import {control,resolverEdicion,resolverFecha, mantenerActualizarString,mantenerActualizarEntero} from "./validaciones.ts"
-import {imprimirtarea,pausa,menu} from "./mostrar.ts";
+import {imprimirtarea,pausa,menu_mostrar} from "./mostrar.ts";
 import {escribirArchivo} from "./readwrite.ts";
 
+//funcion no pura
 export async function agregarTarea():Promise<Tarea> 
     {
         console.log("Estas creando una nueva tarea.\n");
-        // Si tiene opciones validas y tambien es obligatorio entonces puede ser vacio.
-        let titulous=await pedirDato( "1. Título:\n", null, true);
-        let descripcionus= await pedirDato("2. Descripción:\n", null, false);
-        //Los que no pueden ser vascios y tienen valores por defecto a opciones validas se les coloca "".
-        let estadous=await pedirDato( "3. Estado ([P]endiente/[E]n curso/[T]erminada/[C]ancelada):\n", ["P", "E", "T", "C",""], true);
-        let vencimiento = await pedirFecha("4.Ingrese fecha de vencimiento (AAAA-MM-DD) o presione Enter para omitir:\n",null);
-        let dificultadus = await pedirDato( "5. Dificultad ([1]/[2]/[3]):\n", ["1", "2", "3",""],true);
-        let fechaCreacionus = await pedirDato("6.¿Desea agregar fecha de creación? [S]í / [N]o:\n", ["S", "N"], true);
-        let ultimaEdicionus = await pedirDato("7.¿Desea agregar última edición? [S]í / [N]o:\n", ["S", "N"], true);
-         // Conclusión de fechas: Si eligió 'S', asigna Date(), de lo contrario null
-        let ultimaEdicionFinal,fechaCreacionFinal;
-        if(fechaCreacionus === "S")
-        { 
-          fechaCreacionFinal =new Date();
-
-        } 
-        else
-        {
-            fechaCreacionFinal=null;
-        }
-        if(ultimaEdicionus === "S")
-        { 
-          ultimaEdicionFinal =new Date()
-
-        } 
-        else
-        {
-            ultimaEdicionFinal=null;
-        }
-        // ahora llamamos al constructor 
-        //En tipos2 se pondria: let nuevaTarea= new Tarea();
+        
+        const {titulous,descripcionus,estadous,vencimiento,dificultadus,fechaCreacion,ultimaEdicion}=await entradaDatosTarea();
+        // ahora llamamos al constructor s
        let nuevaTarea = new Tarea(
             titulous,
             descripcionus,
             estadous ||"P",
-            fechaCreacionFinal,
-            ultimaEdicionFinal,
+            fechaCreacion,
+            ultimaEdicion,
             resolverFecha(vencimiento,null),
             Number(dificultadus) || 1
         );
@@ -51,14 +24,14 @@ export async function agregarTarea():Promise<Tarea>
     }
 
 
-// funcion pura:
+// funcion no pura:
 export async function verTareas(listaDeTareas: Tarea[]): Promise<void>
     {
         if (control(listaDeTareas))
         {
          return;
         }
-        await menu();
+        await menu_mostrar(false);
         let opcion= await pedirNumero("> \n",undefined,undefined);
         if (opcion===0)
         { 
@@ -113,28 +86,18 @@ export async function verDetalleTarea(listaDeTareas: Tarea[],indice: number): Pr
         const nuevoEstado=await pedirDato( "3. Estado ([P]endiente/[E]n curso/[T]erminada/[C]ancelada) o dejalo en blanco para mantener(no espacio) \n", ["P", "E", "T", "C",""], true);
         const nuevaDificultad = await pedirDato( "4. Dificultad ([1]/[2]/[3]) o dejalo en blanco para mantener(no espacio) \n", ["1", "2", "3",""],true);
         const vencimiento=await pedirFecha("5.Ingrese fecha de vencimiento (AAAA-MM-DD)\n", true);
-        //Lo mismo en tipos2.ts.
+       
         const titulo=mantenerActualizarString(nuevoTitulo,listaDeTareas[indice-1].titulo);
         const estado=mantenerActualizarString(nuevoEstado,listaDeTareas[indice-1].estado);
         const dificultad=mantenerActualizarEntero(nuevaDificultad,listaDeTareas[indice-1].dificultad);
-        listaDeTareas[indice-1]=listaDeTareas[indice-1].editar
-        (
-            titulo,
-            resolverEdicion(nuevaDescripcion, listaDeTareas[indice-1].descripcion),
-            estado,
-            listaDeTareas[indice-1].fechaCreacion,
-            new Date(),
-            resolverFecha(vencimiento,listaDeTareas[indice-1].fechaVencimiento),
-            Number(dificultad)
-
-        );
+        listaDeTareas[indice-1] = aplicarEdicion(listaDeTareas[indice-1],titulo,resolverEdicion(nuevaDescripcion, listaDeTareas[indice-1].descripcion),estado,Number(dificultad),resolverFecha(vencimiento,listaDeTareas[indice-1].fechaVencimiento), new Date());
         //Escribimos nuevamente:
         await escribirArchivo(listaDeTareas);
         console.log("¡Datos guardados!\n");
         await pausa("Presiona cualquier tecla para continuar ...\n");
             
     }
-//funcion pura
+//funcion pura:
 export async function buscarTareas(listaDeTareas: Tarea[]): Promise<void>
     {
         if (control(listaDeTareas))
@@ -147,5 +110,16 @@ export async function buscarTareas(listaDeTareas: Tarea[]): Promise<void>
 
     }
 
-
-
+//funcion pura.
+ function aplicarEdicion(tareaActual: Tarea, titulo: string, descripcion: string | null, estado: string, dificultad: number, fechaVencimiento: Date | null , fechaEdicion: Date): Tarea
+{
+    return tareaActual.editar(
+        titulo,
+        descripcion,
+        estado,
+        tareaActual.fechaCreacion,
+        fechaEdicion,
+        fechaVencimiento,
+        dificultad
+    );
+}

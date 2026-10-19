@@ -1,4 +1,4 @@
-import type { Tarea } from "./tipos.ts";
+import  { Tarea,Fecha } from "./tipos.ts";
 
 // funcion pura
 export function control(listaDeTareas: Tarea[]): boolean {
@@ -82,4 +82,75 @@ export function mantenerActualizarEntero(entrada: string, valorAnterior: number)
     {
     return entrada;
     }
+}
+//funcion pura:
+export function validacionFecha(fechaCreacionus: string, ultimaEdicionus:string): {fechaCreacion: Date| null, ultimaEdicion: Date| null}
+{
+let ultimaEdicion,fechaCreacion;
+        if(fechaCreacionus === "S")
+        { 
+         fechaCreacion =new Date();
+
+        } 
+        else
+        {
+            fechaCreacion=null;
+        }
+        if(ultimaEdicionus === "S")
+        { 
+           ultimaEdicion =new Date()
+
+        } 
+        else
+        {
+            ultimaEdicion=null;
+        }
+    return{fechaCreacion,ultimaEdicion}
+
+}
+// funcion pura:
+export function filtrarTareas(listaDeTareas:Tarea[],condicion:string | null,buscar:string | null):Tarea[]
+{
+const tareasFiltradas: Tarea[] = [];
+for (let i=0; i<listaDeTareas.length; i++) 
+        {
+            if(buscar!==null) //Si estamos buscando entonces en la variable buscar se tiene el titulo de la tarea a buscar.
+            {
+              if(buscar.trim() !== "" && listaDeTareas[i].coincideTitulo(buscar))
+                {
+                    //añadimos a la tarea filtrada.
+       
+                 tareasFiltradas.push(listaDeTareas[i]);
+                }
+            } 
+            else 
+            {
+                // Si no estamso buscando y estamos viendo todas las tareas ya sea todas(null),Pendiente,En curso, Finalizadas:
+              if(listaDeTareas[i].coincideEstado(condicion))
+                {
+                    //añadimso todas las tareas solo que cumpla la condicion o todas.
+                    tareasFiltradas.push(listaDeTareas[i]);
+                }
+            }
+        }    
+    return tareasFiltradas;
+}
+// funcion pura:
+export function parsearTarea(item: any): Tarea | null
+{
+    // si los campos obligatorios no existen retornamos null, no existe la tarea.
+    if (typeof item.titulo !== "string" || item.titulo.trim() === "" || typeof item.dificultad !== "number")
+    {
+        return null;
+    }
+    return new Tarea(
+        // Comprobamos que los datos opcionales y que tambien se pueden dejar por defecto, esten correctos:
+        item.titulo,
+        typeof item.descripcion === "string" ? item.descripcion : null,
+        typeof item.estado === "string" ? item.estado : null,
+        item.fechaCreacion ? new Date(item.fechaCreacion) : null,
+        item.ultimaEdicion ? new Date(item.ultimaEdicion) : null,
+        item.fechaVencimiento ? new Date(item.fechaVencimiento) : null,
+        item.dificultad
+    );
 }

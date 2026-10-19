@@ -9,7 +9,7 @@ export class Tarea
     ultimaEdicion: Date | null = null;
     fechaVencimiento: Date | null = null;
     dificultad: number = 0;
-    // funcion no pura:
+    // funcion pura:
     constructor(titulo: string,descripcion: string | null,estado: string, fechaCreacion: Date | null, ultimaEdicion: Date | null, fechaVencimiento:Date| null, dificultad: number )
     {
      this.titulo=titulo;
@@ -71,5 +71,12 @@ function mostrarCampo(mensaje: string,valor:string | Date| null )
         }
     }
 
-
-
+export class Fecha{
+fechaCreacion: Date | null =null;
+fechaUltimaEdicion: Date | null = null;
+cosntructor(fechaCreacion: Date | null, fechaUltimaEdicion: Date | null)
+{
+this.fechaCreacion=fechaCreacion;
+this.fechaUltimaEdicion=fechaUltimaEdicion;    
+}
+}

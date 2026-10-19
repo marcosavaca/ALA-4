@@ -1,16 +1,16 @@
 import{cerrar,pedirNumero} from "./entrada.ts"
 import { verTareas, buscarTareas, agregarTarea } from "./operaciones.ts";
 import { Tarea } from "./tipos.ts";
-import{pausa,menu2} from "./mostrar.ts";
+import{pausa,menu_mostrar} from "./mostrar.ts";
 import { CargarTareas, escribirArchivo } from "./readwrite.ts";
-
+//funcion no pura:
 async function menu(): Promise<void> 
 {
     let salir = false;
     let listaDeTareas: Tarea[] = await CargarTareas();
     while (!salir) 
         {
-        menu2();
+        menu_mostrar(true);
         let opcion = await pedirNumero(">\n",undefined,undefined);
         switch (opcion) 
         {
