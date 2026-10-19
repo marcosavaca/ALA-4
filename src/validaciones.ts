@@ -84,12 +84,12 @@ export function mantenerActualizarEntero(entrada: string, valorAnterior: number)
     }
 }
 //funcion pura:
-export function validacionFecha(fechaCreacionus: string, ultimaEdicionus:string): {fechaCreacion: Date| null, ultimaEdicion: Date| null}
+export function validacionFecha(fechaCreacionus: string, ultimaEdicionus:string, fecha:Date): {fechaCreacion: Date| null, ultimaEdicion: Date| null}
 {
 let ultimaEdicion,fechaCreacion;
         if(fechaCreacionus === "S")
         { 
-         fechaCreacion =new Date();
+         fechaCreacion =fecha;
 
         } 
         else
@@ -98,7 +98,7 @@ let ultimaEdicion,fechaCreacion;
         }
         if(ultimaEdicionus === "S")
         { 
-           ultimaEdicion =new Date()
+           ultimaEdicion =fecha;
 
         } 
         else

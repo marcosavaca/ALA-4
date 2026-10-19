@@ -125,7 +125,7 @@ Promise<{
     let dificultadus = await pedirDato( "5. Dificultad ([1]/[2]/[3]):\n", ["1", "2", "3",""],true);
     let fechaCreacionus = await pedirDato("6.¿Desea agregar fecha de creación? [S]í / [N]o:\n", ["S", "N"], true);
     let ultimaEdicionus = await pedirDato("7.¿Desea agregar última edición? [S]í / [N]o:\n", ["S", "N"], true);
-    const{ fechaCreacion, ultimaEdicion }=validacionFecha(fechaCreacionus,ultimaEdicionus); 
+    const{ fechaCreacion, ultimaEdicion }=validacionFecha(fechaCreacionus,ultimaEdicionus,new Date()); 
     return{titulous,descripcionus,estadous,vencimiento,dificultadus,fechaCreacion,ultimaEdicion}
 }
 
