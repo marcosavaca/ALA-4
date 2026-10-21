@@ -1,5 +1,6 @@
 import  { Tarea } from "./tipos.ts";
 
+
 // funcion pura
 export function control(listaDeTareas: Tarea[]): boolean {
     if (listaDeTareas.length === 0) 

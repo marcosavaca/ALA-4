@@ -1,18 +1,18 @@
-import { pedirNumero } from "./entrada.ts"
+import { pedir,validarNumero } from "./entrada.ts"
 import { verDetalleTarea } from "./operaciones.ts";
 import { Tarea } from "./tipos.ts";
 import {filtrarTareas} from "./validaciones.ts";
-import {rl} from "./entrada.ts";
+import type { Interface } from "node:readline/promises";
 
 //funcion no pura:
-export async function imprimirtarea(listaDeTareas: Tarea[],condicion: string | null,buscar:string | null): Promise<void>
+export async function imprimirtarea(rl:Interface,listaDeTareas: Tarea[],condicion: string | null,buscar:string | null): Promise<Tarea[]>
     {
 
         const tareasFiltradas=filtrarTareas(listaDeTareas,condicion,buscar);
         if(tareasFiltradas.length===0) 
         {
          console.log("No hay tareas relacionadas a la busqueda\n");
-            return;
+            return listaDeTareas;
         }
         //Si es buscar o imprimir todas las tareas o por condicion cambia el mensaje:
         if(buscar) 
@@ -32,24 +32,19 @@ export async function imprimirtarea(listaDeTareas: Tarea[],condicion: string | n
         }
 
         console.log("¿Deseas ver los detalles de alguna? \n");
-        const entrada = await pedirNumero("Introduce el numero de la tarea o 0 para volver \n",0,tareasFiltradas.length);
+        const entrada = await pedir(rl,"Introduce el numero de la tarea o 0 para volver \n",(e)=> validarNumero(e,0,tareasFiltradas.length));
     
         const indice = Number(entrada);
         if (indice===0)
         {
-         return;
+         return listaDeTareas;
         }
 
         // Traducimos el indice de la lista filtrada al indice real dentro de listaDeTareas,
         // para que verDetalleTarea escriba el archivo con todas las tareas y no solo las filtradas.
         const tareaSeleccionada = tareasFiltradas[indice-1];
         const indiceOriginal = listaDeTareas.indexOf(tareaSeleccionada) + 1;
-
-        await verDetalleTarea(listaDeTareas, indiceOriginal);
+        // retorna a verTareas o a busqueada.
+        return await verDetalleTarea(rl,listaDeTareas, indiceOriginal);
     }
-// funcion no pura:
-export async function pausa(mensaje: string): Promise<void> 
-{
-    await rl.question(mensaje);
-}
-//funcion no pura:
+

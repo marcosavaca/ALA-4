@@ -29,19 +29,7 @@ export async function CargarTareas():Promise<Tarea[]>
         return [];
     }
 }
-// funcionn no pura:
-export async function escribirArchivo(listaDeTareas:Tarea[]):Promise<void> 
-{
-    const contenido = JSON.stringify(listaDeTareas, null, 2);
-    try 
-    {
-        await fs.writeFile('./archivos/tasks.json', contenido,"utf-8");
-       
-    } catch (error) 
-    {
-     
-    }
-}
+
 //funcion pura:
 function parsearTarea(item: any): Tarea | null
 {
