@@ -114,12 +114,12 @@ let ultimaEdicion,fechaCreacion;
 }
 // funcion pura:
 
-export function filtrarporTitulo(buscar:string,listaDeTareas:Tarea[]):Tarea[]
+export function filtrarPorTitulo(buscar:string,listaDeTareas:Tarea[]):Tarea[]
 {
 return listaDeTareas.filter((tarea) => tarea.coincideTitulo(buscar));
 }
 
-export function filtrarporEstado(condicion:string | null,listaDeTareas:Tarea[]):Tarea[]
+export function filtrarPorEstado(condicion:string | null,listaDeTareas:Tarea[]):Tarea[]
 {
     if(condicion===null){
         return listaDeTareas;
@@ -127,11 +127,11 @@ export function filtrarporEstado(condicion:string | null,listaDeTareas:Tarea[]):
 return listaDeTareas.filter((tarea) => tarea.coincideEstado(condicion));
 }
 
-export function filtrarporDescripcion(condicion:string,listaDeTareas:Tarea[]): Tarea[]
+export function filtrarPorDescripcion(condicion:string,listaDeTareas:Tarea[]): Tarea[]
 {
 return listaDeTareas.filter((tarea)=> tarea.coincideDescripcion(condicion));
 }
-export function filtrarporDificultad(condicion:number,listaDeTareas:Tarea[]): Tarea[]
+export function filtrarPorDificultad(condicion:number,listaDeTareas:Tarea[]): Tarea[]
 {
 return listaDeTareas.filter((tarea)=> tarea.coincideDificultad(condicion));
 }

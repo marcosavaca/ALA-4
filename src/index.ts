@@ -1,5 +1,5 @@
-import{pedir,validarNumero} from "./entrada.ts"
-import {verTareas, agregarTarea, buscarTareas,ordenarTareas } from "./operaciones.ts";
+import{pedir,validarFecha,validarNumero} from "./entrada.ts"
+import {verTareas, agregarTarea, buscarTareas,ordenarTareas, ordenarPorFecha } from "./operaciones.ts";
 import { Tarea } from "./tipos.ts";
 import { cargarTareas,escribirArchivo } from "./readwrite.ts";
 import { createInterface } from "node:readline/promises";
@@ -42,8 +42,16 @@ async function menu(): Promise<void>
                 console.log("Por cual criterio desea ordenar?: \n");
                 console.log("1- Por titulo de forma alfabetica \n");
                 console.log("2- Por nivel \n");
-                const  criterio=await pedir(rl,">\n",(e)=> validarNumero(e,1,2));
+                console.log("3- Por fecha creacion \n")
+                const  criterio=await pedir(rl,">\n",(e)=> validarNumero(e,1,3));
+                if(criterio!==3)
+                {
                 imprimirTarea(rl,false, listaDeTareas, ordenarTareas(criterio,listaDeTareas));
+                }
+                else
+                {
+                imprimirTarea(rl,false, listaDeTareas, ordenarPorFecha(listaDeTareas));
+                }
             break;
             case 0: 
              salir = true; 

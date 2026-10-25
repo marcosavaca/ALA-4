@@ -1,6 +1,6 @@
 import { pedir,validarDato, validarFecha, validarNumero } from "./entrada.ts";
 import { Tarea } from "./tipos.ts";
-import {control,resolverFecha,validacionFecha,filtrarporDescripcion,filtrarporDificultad,filtrarporTitulo,filtrarporEstado} from "./validaciones.ts"
+import {control,resolverFecha,validacionFecha,filtrarPorDescripcion,filtrarPorDificultad,filtrarPorTitulo,filtrarPorEstado} from "./validaciones.ts"
 import {imprimirTarea} from "./mostrar.ts";
 import type { Interface } from "node:readline/promises";
 
@@ -47,19 +47,19 @@ export async function verTareas(rl:Interface,listaDeTareas: Tarea[]): Promise<Ta
             switch(opcion)
             {
                 case 1:
-                    return await imprimirTarea(rl,false,listaDeTareas,filtrarporEstado(null,listaDeTareas));
+                    return await imprimirTarea(rl,false,listaDeTareas,filtrarPorEstado(null,listaDeTareas));
                     break;
                 case 2:
-                    return await imprimirTarea(rl,false,listaDeTareas,filtrarporEstado("P",listaDeTareas));
+                    return await imprimirTarea(rl,false,listaDeTareas,filtrarPorEstado("P",listaDeTareas));
                     break;
                 case 3:
-                    return await imprimirTarea(rl,false,listaDeTareas,filtrarporEstado("E",listaDeTareas));
+                    return await imprimirTarea(rl,false,listaDeTareas,filtrarPorEstado("E",listaDeTareas));
                     break;
                 case 4:
-                    return await imprimirTarea(rl,false,listaDeTareas,filtrarporEstado("T",listaDeTareas));
+                    return await imprimirTarea(rl,false,listaDeTareas,filtrarPorEstado("T",listaDeTareas));
                     break;
                 case 5:
-                    return await imprimirTarea(rl,false,listaDeTareas,filtrarporEstado("T",listaDeTareas));
+                    return await imprimirTarea(rl,false,listaDeTareas,filtrarPorEstado("T",listaDeTareas));
                     break;
                 default:
                     console.log("Ingrese una opcion valida \n");
@@ -84,15 +84,15 @@ export async function buscarTareas(rl:Interface, listaDeTareas:Tarea[]): Promise
         {
          case 1:
             const titulo= await pedir(rl,"Ingrese el titulo de la tarea a buscar \n",(e)=>validarDato(e,null,false));
-              return await imprimirTarea(rl,true,listaDeTareas,filtrarporTitulo(titulo,listaDeTareas));     
+              return await imprimirTarea(rl,true,listaDeTareas,filtrarPorTitulo(titulo,listaDeTareas));     
             break;
         case 2:
             const descripcion= await pedir(rl,"Ingrese la descripcion de la tarea a buscar \n",(e)=>validarDato(e,null,false));
-            return await imprimirTarea(rl,true,listaDeTareas,filtrarporDescripcion(descripcion,listaDeTareas));  
+            return await imprimirTarea(rl,true,listaDeTareas,filtrarPorDescripcion(descripcion,listaDeTareas));  
             break;
         case 3:
         const dificultad=await pedir(rl,"1 al 3 \n",(e)=>validarNumero(e,1,3));
-        return await imprimirTarea(rl,true,listaDeTareas,filtrarporDificultad(dificultad,listaDeTareas)); 
+        return await imprimirTarea(rl,true,listaDeTareas,filtrarPorDificultad(dificultad,listaDeTareas)); 
             break;
         
         default:
@@ -129,6 +129,7 @@ function crearTarea(titulous: string, descripcionus: string | null, estadous: st
         );
 
 }
+// funcion pura:
 export function ordenarTareas(criterio:number,listaDeTareas:Tarea[]):Tarea[]
 {
  const copia = [...listaDeTareas];   // sort modifica el array, por eso se ordena una copia
@@ -141,4 +142,26 @@ export function ordenarTareas(criterio:number,listaDeTareas:Tarea[]):Tarea[]
         return copia.sort((a, b) => a.dificultad - b.dificultad);
     }
    
+}
+// tareas sin fecha creacion entonces al final.
+export function ordenarPorFecha(listaDeTareas:Tarea[]):Tarea[]
+{
+const copia = [...listaDeTareas]; 
+return copia.sort((a, b) => compararFechas(a.fechaCreacion, b.fechaCreacion));
+}
+function compararFechas(a: Date | null, b: Date | null): number
+{
+    if (a === null && b === null)
+    {
+        return 0;
+    }
+    if (a === null)
+    {
+        return 1;
+    }
+    if (b === null)
+    {
+        return -1;
+    }
+    return a.getTime() - b.getTime();
 }
