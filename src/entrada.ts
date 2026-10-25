@@ -23,7 +23,7 @@ export function validarDato(entrada: string, opcionesValidas: string[] | null, o
 {
     if (opcionesValidas)
     {
-        const minus = entrada.toLocaleLowerCase();
+        const minus = entrada.toLocaleUpperCase();
         if (opcionesValidas.includes(minus))
         {
             return { ok: true, valor: minus };
@@ -46,7 +46,7 @@ export function validarDato(entrada: string, opcionesValidas: string[] | null, o
     }
 }
 // funcion pura:
-export function validarFecha(entrada: string, editar: boolean | null, hoy: Date): Resultado<string>
+export function validarFecha(entrada: string, editar: boolean, hoy: Date): Resultado<string>
 {
     if (entrada === "")
     {

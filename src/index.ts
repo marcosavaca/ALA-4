@@ -1,8 +1,9 @@
 import{pedir,validarNumero} from "./entrada.ts"
-import {verTareas, agregarTarea, buscarTareas } from "./operaciones.ts";
+import {verTareas, agregarTarea, buscarTareas,ordenarTareas } from "./operaciones.ts";
 import { Tarea } from "./tipos.ts";
 import { cargarTareas,escribirArchivo } from "./readwrite.ts";
 import { createInterface } from "node:readline/promises";
+import {imprimirTarea} from "./mostrar.ts";
 //funcion no pura:
 async function menu(): Promise<void> 
 {
@@ -16,6 +17,7 @@ async function menu(): Promise<void>
         console.log("[1] Ver mis Tareas\n");
         console.log("[2] Buscar una Tarea\n");
         console.log("[3] Agregar una Tarea\n");
+        console.log("[4] Ordenar tareas por:  \n");
         console.log("[0] Salir\n");
         const opcion= await pedir(rl,">\n",(e)=>validarNumero(e,0,3));
         switch (opcion) 
@@ -27,8 +29,8 @@ async function menu(): Promise<void>
             case 3: 
                 listaDeTareas = [...listaDeTareas, await agregarTarea(rl)]
                 // escribir archivo:
-                const mensaje=escribirArchivo(listaDeTareas);
-                if(mensaje!==null)
+                const mensaje= await escribirArchivo(listaDeTareas);
+                if(mensaje===null)
                 {
                 console.log("¡Datos guardados!\n");
                 }
@@ -36,6 +38,12 @@ async function menu(): Promise<void>
                 {
                     console.log(`${mensaje} \n`);
                 }
+            case 4:
+                console.log("Por cual criterio desea ordenar?: \n");
+                console.log("1- Por titulo de forma alfabetica \n");
+                console.log("2- Por nivel \n");
+                const  criterio=await pedir(rl,">\n",(e)=> validarNumero(e,1,2));
+                imprimirTarea(rl,false, listaDeTareas, ordenarTareas(criterio,listaDeTareas));
             break;
             case 0: 
              salir = true; 

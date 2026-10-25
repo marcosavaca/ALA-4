@@ -64,10 +64,10 @@ export class Tarea
         console.log("Esta es la tarea que elegiste: \n");
         console.log(`Titulo: ${this.titulo} \n`);
         console.log(`Dificultad: ${this.dificultad} \n`);
-        esVacio(this.descripcion,"Descripcion");
-        esVacio(this.fechaCreacion,"Fecha de creacion");
-        esVacio(this.ultimaEdicion,"Ultima edicion");
-        esVacio(this.fechaVencimiento,"Fecha de vencimiento");
+        console.log(esVacio(this.descripcion,"Descripcion"));
+        console.log(esVacio(this.fechaCreacion,"Fecha de creacion"));
+        console.log(esVacio(this.ultimaEdicion,"Ultima edicion"));
+        console.log(esVacio(this.fechaVencimiento,"Fecha de vencimiento"));
 
     }
 }

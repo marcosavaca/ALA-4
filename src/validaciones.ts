@@ -113,50 +113,25 @@ let ultimaEdicion,fechaCreacion;
 
 }
 // funcion pura:
-export function filtrarTareas(opcion:number | null,listaDeTareas:Tarea[],estadoCondicion:string | null,tituloBuscar:string | null):Tarea[]
-{
-const tareasaFiltrar: Tarea[] =listaDeTareas;
-            if(tituloBuscar!==null) //Si estamos buscando entonces en la variable buscar se tiene el titulo de la tarea a buscar.
-            {
-              if(tituloBuscar.trim() !== "")
-                {
-                    //devolvemos solo la lista de tareas filtradas.
-                    return filtrarporTitulo(tituloBuscar,tareasaFiltrar)
-                }
-            } 
-            else 
-            {
-                // Si no estamso buscando y estamos viendo todas las tareas ya sea todas(null),Pendiente,En curso, Finalizadas:
-            if(estadoCondicion!==null )
-             if(opcion===1)
-             {
-             return filtrarporEstado(estadoCondicion,tareasaFiltrar);
-             } 
-             else
-             {
-             return opcion===2? filtrarporDescripcion(estadoCondicion,tareasaFiltrar): filtrarporDificultad(Number(estadoCondicion),tareasaFiltrar);
-             }
-             
-            }
-        return listaDeTareas;
-         
-}    
 
-function filtrarporTitulo(buscar:string,listaDeTareas:Tarea[]):Tarea[]
+export function filtrarporTitulo(buscar:string,listaDeTareas:Tarea[]):Tarea[]
 {
 return listaDeTareas.filter((tarea) => tarea.coincideTitulo(buscar));
 }
 
-function filtrarporEstado(condicion:string,listaDeTareas:Tarea[]):Tarea[]
+export function filtrarporEstado(condicion:string | null,listaDeTareas:Tarea[]):Tarea[]
 {
+    if(condicion===null){
+        return listaDeTareas;
+    }
 return listaDeTareas.filter((tarea) => tarea.coincideEstado(condicion));
 }
 
-function filtrarporDescripcion(condicion:string,listaDeTareas:Tarea[]): Tarea[]
+export function filtrarporDescripcion(condicion:string,listaDeTareas:Tarea[]): Tarea[]
 {
 return listaDeTareas.filter((tarea)=> tarea.coincideDescripcion(condicion));
 }
-function filtrarporDificultad(condicion:number,listaDeTareas:Tarea[]): Tarea[]
+export function filtrarporDificultad(condicion:number,listaDeTareas:Tarea[]): Tarea[]
 {
 return listaDeTareas.filter((tarea)=> tarea.coincideDificultad(condicion));
 }
