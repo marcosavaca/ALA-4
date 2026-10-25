@@ -1,15 +1,14 @@
 import{pedir,validarNumero} from "./entrada.ts"
-import { verTareas, buscarTareas, agregarTarea } from "./operaciones.ts";
+import {verTareas, agregarTarea, buscarTareas } from "./operaciones.ts";
 import { Tarea } from "./tipos.ts";
-import { CargarTareas } from "./readwrite.ts";
+import { cargarTareas,escribirArchivo } from "./readwrite.ts";
 import { createInterface } from "node:readline/promises";
-import fs from 'fs/promises';
 //funcion no pura:
 async function menu(): Promise<void> 
 {
     const rl = createInterface({ input: process.stdin, output: process.stdout });
     let salir = false;
-    let listaDeTareas: Tarea[] = await CargarTareas();
+    let listaDeTareas: Tarea[] = await cargarTareas();
     while (!salir) 
         {
         console.log("¡Hola Olivia!\n");
@@ -28,17 +27,15 @@ async function menu(): Promise<void>
             case 3: 
                 listaDeTareas = [...listaDeTareas, await agregarTarea(rl)]
                 // escribir archivo:
-                const contenido = JSON.stringify(listaDeTareas, null, 2);
-                try 
+                const mensaje=escribirArchivo(listaDeTareas);
+                if(mensaje!==null)
                 {
-                await fs.writeFile('./archivos/tasks.json', contenido,"utf-8");
-                
-                } catch (error) 
+                console.log("¡Datos guardados!\n");
+                }
+                else
                 {
-                 console.log(`error : ${error} `);
-                }   
-                console.log("¡Datos guardados en el archivo!.\n");
-                console.log("Presiona cualquier tecla para continuar ...\n");
+                    console.log(`${mensaje} \n`);
+                }
             break;
             case 0: 
              salir = true; 

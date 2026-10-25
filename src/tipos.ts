@@ -1,4 +1,4 @@
-import {esvacio} from "./validaciones.ts";
+import {esVacio} from "./validaciones.ts";
 
 export class Tarea
 {   
@@ -43,30 +43,31 @@ export class Tarea
     {
         return this.titulo.toLowerCase().includes(buscar.toLowerCase());    
     }
+    coincideDescripcion(buscar:string):boolean
+    {
+        if(this.descripcion!=null)
+        {
+        return this.descripcion.toLowerCase().includes(buscar.toLowerCase());  
+        }
+        else
+        {
+        return false;
+        }
+    }
+    coincideDificultad(dificultad:number):boolean
+    {
+        return this.dificultad === dificultad;
+    }
     //funciion no pura:
     mostrarDetalle():void
     {
         console.log("Esta es la tarea que elegiste: \n");
         console.log(`Titulo: ${this.titulo} \n`);
         console.log(`Dificultad: ${this.dificultad} \n`);
-        mostrarCampo("Descripcion", this.descripcion);
-        console.log(`Estado: ${this.estado} \n`);
-        mostrarCampo("Fecha de creacion", this.fechaCreacion);
-        mostrarCampo("Ultima edicion", this.ultimaEdicion);
-        mostrarCampo("Fecha de vencimiento", this.fechaVencimiento);
+        esVacio(this.descripcion,"Descripcion");
+        esVacio(this.fechaCreacion,"Fecha de creacion");
+        esVacio(this.ultimaEdicion,"Ultima edicion");
+        esVacio(this.fechaVencimiento,"Fecha de vencimiento");
 
     }
 }
-// funcion no pura.
-function mostrarCampo(mensaje: string,valor:string | Date| null )
-    {
-        if(esvacio(valor))
-        {
-            console.log(`${mensaje}: Sin datos \n`);
-            return;
-        }
-        else
-        {
-        console.log(`${mensaje}: ${valor} \n`);  
-        }
-    }

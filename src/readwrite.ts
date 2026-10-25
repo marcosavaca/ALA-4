@@ -1,7 +1,7 @@
 import fs from 'fs/promises';
 import { Tarea } from "./tipos.ts";
 // funcion pura:
-export async function CargarTareas():Promise<Tarea[]>
+export async function cargarTareas():Promise<Tarea[]>
 {
     try 
     {
@@ -48,4 +48,19 @@ function parsearTarea(item: any): Tarea | null
         item.fechaVencimiento ? new Date(item.fechaVencimiento) : null,
         item.dificultad
     );
+}
+//funcion pura:
+export async function escribirArchivo(listaActualizada: Tarea[]): Promise<{ mensaje: string | null }>
+{
+    let mensaje: string | null = null;
+ const contenido = JSON.stringify(listaActualizada, null, 2);
+    try 
+    {
+     await fs.writeFile('./archivos/tasks.json', contenido,"utf-8");
+                        
+    } catch (error) 
+    {
+    mensaje=(`error : ${error} `);
+    }   
+    return {mensaje};
 }

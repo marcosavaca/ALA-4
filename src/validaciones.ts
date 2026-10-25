@@ -11,22 +11,25 @@ export function control(listaDeTareas: Tarea[]): boolean {
     return false;
 }
 //funcion pura
-export function esvacio(valor: string| Date | null): boolean
+export function esVacio(valor: string| Date | null, mensaje:string): string
     {
         if(valor===null || valor===undefined)
         {
-         return true;
+         return `${mensaje}: Sin datos \n`;
         }
         if (valor instanceof Date)  //un fecha no se deja vacia y por default se poone la fecha de creacion.
-        {  
-            return false
+        {
+            return `${mensaje}: ${valor} \n`;
         }
         if(typeof valor === "string")
         {
-            return valor.trim() === "";  // si es un string y espacio en blanco entonces es vacio.
+            if (valor.trim() === "")
+            {
+                return `${mensaje}: Sin datos \n`;
+            }  // si es un string y espacio en blanco entonces es vacio.
         }
         // si no cumple que sea nulo o stirng y espacio en blanco entonces es falso.
-        return false;
+        return `${mensaje}: ${valor} \n`;
     }
     // funcion pura
 export function resolverEdicion(entrada: string, valorAnterior:string | null):string | null
@@ -110,29 +113,50 @@ let ultimaEdicion,fechaCreacion;
 
 }
 // funcion pura:
-export function filtrarTareas(listaDeTareas:Tarea[],condicion:string | null,buscar:string | null):Tarea[]
+export function filtrarTareas(opcion:number | null,listaDeTareas:Tarea[],estadoCondicion:string | null,tituloBuscar:string | null):Tarea[]
 {
-const tareasFiltradas: Tarea[] = [];
-for (let i=0; i<listaDeTareas.length; i++) 
-        {
-            if(buscar!==null) //Si estamos buscando entonces en la variable buscar se tiene el titulo de la tarea a buscar.
+const tareasaFiltrar: Tarea[] =listaDeTareas;
+            if(tituloBuscar!==null) //Si estamos buscando entonces en la variable buscar se tiene el titulo de la tarea a buscar.
             {
-              if(buscar.trim() !== "" && listaDeTareas[i].coincideTitulo(buscar))
+              if(tituloBuscar.trim() !== "")
                 {
-                    //añadimos a la tarea filtrada.
-       
-                 tareasFiltradas.push(listaDeTareas[i]);
+                    //devolvemos solo la lista de tareas filtradas.
+                    return filtrarporTitulo(tituloBuscar,tareasaFiltrar)
                 }
             } 
             else 
             {
                 // Si no estamso buscando y estamos viendo todas las tareas ya sea todas(null),Pendiente,En curso, Finalizadas:
-              if(listaDeTareas[i].coincideEstado(condicion))
-                {
-                    //añadimso todas las tareas solo que cumpla la condicion o todas.
-                    tareasFiltradas.push(listaDeTareas[i]);
-                }
+            if(estadoCondicion!==null )
+             if(opcion===1)
+             {
+             return filtrarporEstado(estadoCondicion,tareasaFiltrar);
+             } 
+             else
+             {
+             return opcion===2? filtrarporDescripcion(estadoCondicion,tareasaFiltrar): filtrarporDificultad(Number(estadoCondicion),tareasaFiltrar);
+             }
+             
             }
-        }    
-    return tareasFiltradas;
+        return listaDeTareas;
+         
+}    
+
+function filtrarporTitulo(buscar:string,listaDeTareas:Tarea[]):Tarea[]
+{
+return listaDeTareas.filter((tarea) => tarea.coincideTitulo(buscar));
+}
+
+function filtrarporEstado(condicion:string,listaDeTareas:Tarea[]):Tarea[]
+{
+return listaDeTareas.filter((tarea) => tarea.coincideEstado(condicion));
+}
+
+function filtrarporDescripcion(condicion:string,listaDeTareas:Tarea[]): Tarea[]
+{
+return listaDeTareas.filter((tarea)=> tarea.coincideDescripcion(condicion));
+}
+function filtrarporDificultad(condicion:number,listaDeTareas:Tarea[]): Tarea[]
+{
+return listaDeTareas.filter((tarea)=> tarea.coincideDificultad(condicion));
 }
