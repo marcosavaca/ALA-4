@@ -4,8 +4,7 @@ type Resultado<T> = { ok: true, valor: T } | { ok: false, error: string };
 //Funcion inpura:
 export async function pedir<T>(rl: Interface, mensaje: string, validar: (entrada:string) => Resultado<T>): Promise<T>
 {
-    while (true)
-    {
+  
         const entrada = await rl.question(mensaje);
         const resultado=validar(entrada);
         if (resultado.ok)
@@ -15,8 +14,9 @@ export async function pedir<T>(rl: Interface, mensaje: string, validar: (entrada
         else
         {
             console.log(resultado.error);
+            //llamada recursion sin while
+            return pedir(rl, mensaje, validar);
         }
-    }
 }
 // funcion pura:
 export function validarDato(entrada: string, opcionesValidas: string[] | null, obligatorio: boolean): Resultado<string>
@@ -48,6 +48,7 @@ export function validarDato(entrada: string, opcionesValidas: string[] | null, o
 // funcion pura:
 export function validarFecha(entrada: string, editar: boolean, hoy: Date): Resultado<string>
 {
+    const fechaSinHora=new Date(hoy.getFullYear(), hoy.getMonth(), hoy.getDate())
     if (entrada === "")
     {
         return { ok: true, valor: "" };
@@ -68,7 +69,7 @@ export function validarFecha(entrada: string, editar: boolean, hoy: Date): Resul
     {
         return { ok: false, error: "Mes y/o día no válidos\n" };
     }
-    if (fecha < hoy)
+    if (fecha < fechaSinHora)
     {
         return { ok: false, error: "La fecha debe ser mayor o igual a la de hoy.\n" };
     }

@@ -1,7 +1,7 @@
 import { pedir,validarDato, validarFecha, validarNumero } from "./entrada.ts";
 import { Tarea } from "./tipos.ts";
 import {resolverEdicion,resolverFecha, mantenerActualizarString,mantenerActualizarEntero} from "./validaciones.ts"
-import type { Interface } from "node:readline/promises";
+import { Interface } from "node:readline/promises";
 import { aplicarEdicion } from "./operaciones.ts";
 import { escribirArchivo } from "./readwrite.ts";
 
@@ -23,13 +23,9 @@ export async function imprimirTarea(rl:Interface,tituloBuscar:boolean,listaDeTar
         {
          console.log("Estas son todas tus tareas!: \n");
         }
+        // llamada a nueva funcion evitando el for.
+        console.log(imprimirTitulos(tareasFiltradas));
 
-        for (let i=0;i<tareasFiltradas.length;i++) 
-        {
-        
-            console.log(`${[i+ 1]} ${tareasFiltradas[i].titulo} \n`);
-            
-        }
 
         console.log("¿Deseas ver los detalles de alguna? \n");
         const entrada = await pedir(rl,"Introduce el numero de la tarea o 0 para volver \n",(e)=> validarNumero(e,0,tareasFiltradas.length));
@@ -71,11 +67,11 @@ export async function imprimirTarea(rl:Interface,tituloBuscar:boolean,listaDeTar
             const titulo=mantenerActualizarString(nuevoTitulo,listaDeTareas[indiceEditar].titulo);
             const estado=mantenerActualizarString(nuevoEstado,listaDeTareas[indiceEditar].estado);
             const dificultad=mantenerActualizarEntero(nuevaDificultad,listaDeTareas[indiceEditar].dificultad);
-            const tareaEditada = aplicarEdicion(listaDeTareas[indice-1],titulo,resolverEdicion(nuevaDescripcion, listaDeTareas[indiceEditar].descripcion),estado,Number(dificultad),resolverFecha(vencimiento,listaDeTareas[indice-1].fechaVencimiento), new Date());
+            const tareaEditada = aplicarEdicion(listaDeTareas[indiceEditar],titulo,resolverEdicion(nuevaDescripcion, listaDeTareas[indiceEditar].descripcion),estado,Number(dificultad),resolverFecha(vencimiento,listaDeTareas[indiceEditar].fechaVencimiento), new Date());
             //Escribimos nuevamente:
             const listaActualizada = listaDeTareas.map((tarea, i) => i === indiceEditar ? tareaEditada : tarea);
             // escribir archivo:
-            const mensaje=escribirArchivo(listaActualizada);
+            const {mensaje}=await escribirArchivo(listaActualizada);
             if(mensaje===null)
             {
             console.log("¡Datos guardados!\n");
@@ -87,3 +83,8 @@ export async function imprimirTarea(rl:Interface,tituloBuscar:boolean,listaDeTar
             return listaActualizada;
     }
 
+//funcion pura que evita el for en imprimirTarea
+export function imprimirTitulos(tareas: Tarea[]): string
+{
+    return tareas.map((tarea, i) => `${i + 1} ${tarea.titulo}`).join("\n");
+}

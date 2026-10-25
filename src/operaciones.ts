@@ -59,7 +59,7 @@ export async function verTareas(rl:Interface,listaDeTareas: Tarea[]): Promise<Ta
                     return await imprimirTarea(rl,false,listaDeTareas,filtrarPorEstado("T",listaDeTareas));
                     break;
                 case 5:
-                    return await imprimirTarea(rl,false,listaDeTareas,filtrarPorEstado("T",listaDeTareas));
+                    return await imprimirTarea(rl,false,listaDeTareas,filtrarPorEstado("C",listaDeTareas));
                     break;
                 default:
                     console.log("Ingrese una opcion valida \n");
