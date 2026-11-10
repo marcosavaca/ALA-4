@@ -31,7 +31,7 @@ export function esVacio(valor: string| Date | null, mensaje:string): string
         // si no cumple que sea nulo o stirng y espacio en blanco entonces es falso.
         return `${mensaje}: ${valor} \n`;
     }
-    // funcion pura
+    // funcion pura: mantener o editar atributo de la tarea, si es que coloc un valor diferente a "".
 export function resolverEdicion(entrada: string, valorAnterior:string | null):string | null
     {
       // mantener
@@ -39,15 +39,16 @@ export function resolverEdicion(entrada: string, valorAnterior:string | null):st
         {
         return valorAnterior;
         }
-        //vaciar:
+        //vaciar, espacio en blanco " " se vacia.
         if (entrada.trim() === ""){
         return "";
         }
+        //Si no es espacio en blanco ni tampoco se mantiene
         return entrada;// valor nuevo
     }
 
-    // funcion pura:
-export function resolverFecha(entrada: string, valorAnterior: Date | null): Date | null  //Despues de pedirFecha ya esta validado, esto es para editar o convertir a Date.
+    // funcion pura pen editando la tarea, si es "" se mantiene, si es " " se deja en blanco, ninguna de las anteriores se retorna nuevo valor.
+export function resolverEdicionFecha(entrada: string, valorAnterior: Date | null): Date | null  //Despues de pedirFecha ya esta validado, esto es para editar o convertir a Date.
 {
     if (entrada === "")
     { 
@@ -59,7 +60,7 @@ export function resolverFecha(entrada: string, valorAnterior: Date | null): Date
 
     }  // vaciar
     const [anio, mes, dia] = entrada.split("-").map(Number);
-    return new Date(anio, mes - 1, dia);            // nueva fecha (-1 por que llega a 11 js.
+    return new Date(anio, mes - 1, dia);            // nueva fecha (-1 por que llega hasta 11 js.
 }
 
 //Son dos funciones iguales por que se tiene que marca error si se coloca: number | string.
@@ -87,8 +88,8 @@ export function mantenerActualizarEntero(entrada: string, valorAnterior: number)
     return entrada;
     }
 }
-//funcion pura:
-export function validacionFecha(fechaCreacionus: string, ultimaEdicionus:string, fecha:Date): {fechaCreacion: Date| null, ultimaEdicion: Date| null}
+//funcion pura, en agregar tarea se elije si la tarea tendra fecha creacion edicion o no.
+export function creacionFecha(fechaCreacionus: string, ultimaEdicionus:string, fecha:Date): {fechaCreacion: Date| null, ultimaEdicion: Date| null}
 {
 let ultimaEdicion,fechaCreacion;
         if(fechaCreacionus === "S")
@@ -112,7 +113,7 @@ let ultimaEdicion,fechaCreacion;
     return{fechaCreacion,ultimaEdicion}
 
 }
-// funcion pura:
+// funciones puras:
 
 export function filtrarPorTitulo(buscar:string,listaDeTareas:Tarea[]):Tarea[]
 {

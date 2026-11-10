@@ -1,6 +1,6 @@
 import { pedir,validarDato, validarFecha, validarNumero } from "./entrada.ts";
 import { Tarea } from "./tipos.ts";
-import {resolverEdicion,resolverFecha, mantenerActualizarString,mantenerActualizarEntero} from "./validaciones.ts"
+import {resolverEdicion,resolverEdicionFecha, mantenerActualizarString,mantenerActualizarEntero} from "./validaciones.ts"
 import { Interface } from "node:readline/promises";
 import { aplicarEdicion } from "./operaciones.ts";
 import { escribirArchivo } from "./readwrite.ts";
@@ -67,7 +67,7 @@ export async function imprimirTarea(rl:Interface,tituloBuscar:boolean,listaDeTar
             const titulo=mantenerActualizarString(nuevoTitulo,listaDeTareas[indiceEditar].titulo);
             const estado=mantenerActualizarString(nuevoEstado,listaDeTareas[indiceEditar].estado);
             const dificultad=mantenerActualizarEntero(nuevaDificultad,listaDeTareas[indiceEditar].dificultad);
-            const tareaEditada = aplicarEdicion(listaDeTareas[indiceEditar],titulo,resolverEdicion(nuevaDescripcion, listaDeTareas[indiceEditar].descripcion),estado,Number(dificultad),resolverFecha(vencimiento,listaDeTareas[indiceEditar].fechaVencimiento), new Date());
+            const tareaEditada = aplicarEdicion(listaDeTareas[indiceEditar],titulo,resolverEdicion(nuevaDescripcion, listaDeTareas[indiceEditar].descripcion),estado,Number(dificultad),resolverEdicionFecha(vencimiento,listaDeTareas[indiceEditar].fechaVencimiento), new Date());
             //Escribimos nuevamente:
             const listaActualizada = listaDeTareas.map((tarea, i) => i === indiceEditar ? tareaEditada : tarea);
             // escribir archivo:

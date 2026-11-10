@@ -1,6 +1,6 @@
 import { pedir,validarDato, validarFecha, validarNumero } from "./entrada.ts";
 import { Tarea } from "./tipos.ts";
-import {control,resolverFecha,validacionFecha,filtrarPorDescripcion,filtrarPorDificultad,filtrarPorTitulo,filtrarPorEstado} from "./validaciones.ts"
+import {control,resolverEdicionFecha,creacionFecha,filtrarPorDescripcion,filtrarPorDificultad,filtrarPorTitulo,filtrarPorEstado} from "./validaciones.ts"
 import {imprimirTarea} from "./mostrar.ts";
 import type { Interface } from "node:readline/promises";
 
@@ -17,7 +17,7 @@ export async function agregarTarea(rl:Interface):Promise<Tarea>
          const dificultadus = await pedir(rl,"5. Dificultad ([1]/[2]/[3]):\n",(e)=>validarDato(e,["1", "2", "3",""],true));
          const fechaCreacionus = await pedir(rl,"6.¿Desea agregar fecha de creación? [S]í / [N]o:\n",(e)=>validarDato(e, ["S", "N"],false));
          const ultimaEdicionus = await pedir(rl,"7.¿Desea agregar fecha de edicion? [S]í / [N]o:\n",(e)=>validarDato(e, ["S", "N"],false));
-         const{ fechaCreacion, ultimaEdicion }=validacionFecha(fechaCreacionus,ultimaEdicionus,new Date()); 
+         const{ fechaCreacion, ultimaEdicion }=creacionFecha(fechaCreacionus,ultimaEdicionus,new Date()); 
         //converitmos en number dificultadus ya que validarDato devuelve solo string aunque vuelve como numero es string
         return crearTarea(titulous,descripcionus,estadous,fechaCreacion,ultimaEdicion,vencimiento,Number(dificultadus))
    
@@ -124,21 +124,26 @@ function crearTarea(titulous: string, descripcionus: string | null, estadous: st
             estadous ||"P",
             fechaCreacion,
             ultimaEdicion,
-            resolverFecha(vencimiento,null),
+            resolverEdicionFecha(vencimiento,null),
             Number(dificultadus) || 1
         );
 
 }
-// funcion pura:
+// funcion pura, se utiliza para case 4 de index.ts si se compara por titulo o dificultad.
 export function ordenarTareas(criterio:number,listaDeTareas:Tarea[]):Tarea[]
 {
- const copia = [...listaDeTareas];   // sort modifica el array, por eso se ordena una copia
+     // sort modifica el array, por eso se ordena una copia, [...listaDeTareas] actua como for y pega todas las tareas a un nuevo array.
+     // si se realiza copia=listaDeTareas; se pasaria por referencia y al modificar copia modificamos listaDeTareas.
+ const copia = [...listaDeTareas];  
+ // Si comparamos por el titulo:
     if (criterio === 1)
     {
+        //comparamos solo por el titulo con la ayuda de localeCompare para que no compare todos los atributos de las tareas.
         return copia.sort((a, b) => a.titulo.localeCompare(b.titulo));
     }
     else 
     {
+        //Si comparamos por la dificultad, >0 a es mayor va primero, =0 iguales se mantiene, <0 a menor va b primero.
         return copia.sort((a, b) => a.dificultad - b.dificultad);
     }
    

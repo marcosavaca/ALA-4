@@ -16,13 +16,16 @@ async function menu(rl:Interface,listaDeTareas:Tarea[]): Promise<void>
         console.log("[3] Agregar una Tarea\n");
         console.log("[4] Ordenar tareas por:  \n");
         console.log("[0] Salir\n");
+        // pedir es funcion de orden superior aunque se llame a la funcion con los parametros ya que se hace un puente (e)=>.
         const opcion= await pedir(rl,">\n",(e)=>validarNumero(e,0,4));
         switch (opcion) 
         {
             case 1: 
+            //recursividad, no es funcion de orden superior.
             return menu(rl,await verTareas(rl, listaDeTareas));
             break;
             case 2:
+           //recursividad, no es funcion de orden superior.
             return menu(rl,await buscarTareas(rl,listaDeTareas)); 
              break;
             case 3: 
@@ -37,6 +40,7 @@ async function menu(rl:Interface,listaDeTareas:Tarea[]): Promise<void>
                 {
                     console.log(`${mensaje} \n`);
                 }
+                //recursividad, no es funcion de orden superior.
                 return menu(rl,listaDeTareas);
             break;
             case 4:
@@ -47,10 +51,12 @@ async function menu(rl:Interface,listaDeTareas:Tarea[]): Promise<void>
                 const  criterio=await pedir(rl,">\n",(e)=> validarNumero(e,1,3));
                 if(criterio!==3)
                 {
+                //recursividad, pero la funcion de ordenarTareas si es funcion de orden superior ya que utiliza .sort dentro.
                 return menu(rl,await imprimirTarea(rl,false, listaDeTareas, ordenarTareas(criterio,listaDeTareas)));
                 }
                 else
                 {
+                //recursividad, pero la funcion de ordenarPorFecha si es funcion de orden superior ya que utiliza .sort dentro.
                 return menu(rl,await imprimirTarea(rl,false, listaDeTareas, ordenarPorFecha(listaDeTareas)));
                 }
             break;

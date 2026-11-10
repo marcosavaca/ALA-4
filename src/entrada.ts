@@ -4,7 +4,6 @@ type Resultado<T> = { ok: true, valor: T } | { ok: false, error: string };
 //Funcion inpura:
 export async function pedir<T>(rl: Interface, mensaje: string, validar: (entrada:string) => Resultado<T>): Promise<T>
 {
-  
         const entrada = await rl.question(mensaje);
         const resultado=validar(entrada);
         if (resultado.ok)
@@ -108,4 +107,5 @@ export function validarNumero(entrada: string, min: number | undefined, max: num
         }
     }
 }
+
 
