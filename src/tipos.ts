@@ -1,24 +1,26 @@
 import {esVacio} from "./validaciones.ts";
 
 export class Tarea
-{   
-    titulo: string = "";
-    descripcion: string | null = null;
-    estado: string = "";
-    fechaCreacion: Date | null = null;
-    ultimaEdicion: Date | null = null;
-    fechaVencimiento: Date | null = null;
-    dificultad: number = 0;
+{
+    readonly titulo: string;
+    readonly descripcion: string | null;
+    readonly estado: string;
+    readonly fechaCreacion: Date | null;
+    readonly ultimaEdicion: Date | null;
+    readonly fechaVencimiento: Date | null;
+    readonly dificultad: number;
     // funcion pura:
-    constructor(titulo: string,descripcion: string | null,estado: string, fechaCreacion: Date | null, ultimaEdicion: Date | null, fechaVencimiento:Date| null, dificultad: number )
+    constructor(titulo: string, descripcion: string | null, estado: string, fechaCreacion: Date | null, ultimaEdicion: Date | null, fechaVencimiento: Date | null, dificultad: number)
     {
-     this.titulo=titulo;
-     this.descripcion=descripcion
-     this.estado=estado;
-     this.fechaCreacion=fechaCreacion;
-     this.ultimaEdicion=ultimaEdicion;
-     this.fechaVencimiento=fechaVencimiento;
-     this.dificultad=dificultad;
+        this.titulo = titulo;
+        this.descripcion = descripcion;
+        this.estado = estado;
+        this.fechaCreacion = fechaCreacion;
+        this.ultimaEdicion = ultimaEdicion;
+        this.fechaVencimiento = fechaVencimiento;
+        this.dificultad = dificultad;
+        // congelamos la tarea: a partir de aca nadie puede modificarla, solo crear una nueva con editar.
+        Object.freeze(this);
     }
     // funcionn pura.
     editar(nuevoTitulo: string,nuevaDescripcion: string | null, nuevoEstado: string,fechaCreacion: Date | null,nuevafechaEdicion: Date | null,  nuevaFechaVencimiento: Date | null, nuevaDificultad: number ): Tarea 

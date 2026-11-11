@@ -3,7 +3,9 @@ import type { Interface } from "node:readline/promises";
 type Resultado<T> = { ok: true, valor: T } | { ok: false, error: string };
 //Funcion inpura:
 export async function pedir<T>(rl: Interface, mensaje: string, validar: (entrada:string) => Resultado<T>): Promise<T>
-{
+{   
+    try
+    {
         const entrada = await rl.question(mensaje);
         const resultado=validar(entrada);
         if (resultado.ok)
@@ -16,6 +18,14 @@ export async function pedir<T>(rl: Interface, mensaje: string, validar: (entrada
             //llamada recursion sin while
             return pedir(rl, mensaje, validar);
         }
+    }
+    catch(error)
+    {
+       console.log(`Ocurrio un error inesperado: ${error}`);
+    }
+    finally{
+    return pedir(rl, mensaje, validar);
+    }
 }
 // funcion pura:
 export function validarDato(entrada: string, opcionesValidas: string[] | null, obligatorio: boolean): Resultado<string>

@@ -54,7 +54,6 @@ async function menu(rl:Interface,listaDeTareas:Tarea[]): Promise<void>
                 ordenarTareas(criterio,listaDeTareas);
             break;
             case 0: 
-                rl.close();
                 return;
              break;
             default: 
@@ -64,7 +63,18 @@ async function menu(rl:Interface,listaDeTareas:Tarea[]): Promise<void>
         }
     }
 const rl = createInterface({ input: process.stdin, output: process.stdout });
-menu(rl,await cargarTareas());
+try
+{
+    await menu(rl, await cargarTareas());
+}
+catch (error)
+{
+    console.log(`Ocurrio un error inesperado: ${error}`);
+}
+finally
+{
+    rl.close();
+}
 
 
 
