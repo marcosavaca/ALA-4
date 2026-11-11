@@ -129,30 +129,13 @@ function crearTarea(titulous: string, descripcionus: string | null, estadous: st
         );
 
 }
-// funcion pura, se utiliza para case 4 de index.ts si se compara por titulo o dificultad.
-export function ordenarTareas(criterio:number,listaDeTareas:Tarea[]):Tarea[]
+// funcion pura, se utiliza para case 4 de index.ts
+export function ordenarTareas(criterio: number, listaDeTareas: Tarea[]): Tarea[]
 {
-     // sort modifica el array, por eso se ordena una copia, [...listaDeTareas] actua como for y pega todas las tareas a un nuevo array.
-     // si se realiza copia=listaDeTareas; se pasaria por referencia y al modificar copia modificamos listaDeTareas.
- const copia = [...listaDeTareas];  
- // Si comparamos por el titulo:
-    if (criterio === 1)
-    {
-        //comparamos solo por el titulo con la ayuda de localeCompare para que no compare todos los atributos de las tareas.
-        return copia.sort((a, b) => a.titulo.localeCompare(b.titulo));
-    }
-    else 
-    {
-        //Si comparamos por la dificultad, >0 a es mayor va primero, =0 iguales se mantiene, <0 a menor va b primero.
-        return copia.sort((a, b) => a.dificultad - b.dificultad);
-    }
-   
-}
-// tareas sin fecha creacion entonces al final.
-export function ordenarPorFecha(listaDeTareas:Tarea[]):Tarea[]
-{
-const copia = [...listaDeTareas]; 
-return copia.sort((a, b) => compararFechas(a.fechaCreacion, b.fechaCreacion));
+    // Primero se invoca a comparadorPor con el criterio
+    // Segundo comparadoPor devulve una funcion que compara.
+    // Luego se sigue invocando a  esa funcion que devolvio comparadoPor hasta que se acabe la totalidad de la comparacion.
+    return [...listaDeTareas].sort(comparadorPor(criterio));
 }
 function compararFechas(a: Date | null, b: Date | null): number
 {
@@ -169,4 +152,26 @@ function compararFechas(a: Date | null, b: Date | null): number
         return -1;
     }
     return a.getTime() - b.getTime();
+}
+//funcion que devuelve funciones:
+export function comparadorPor(criterio: number)
+{
+    if (criterio === 1)
+    {
+        return function(a: Tarea, b: Tarea) {
+            return a.titulo.localeCompare(b.titulo);
+        };
+    }
+    else if (criterio === 2)
+    {
+        return function(a: Tarea, b: Tarea) {
+            return a.dificultad - b.dificultad;
+        };
+    }
+    else
+    {
+        return function(a: Tarea, b: Tarea) {
+            return compararFechas(a.fechaCreacion, b.fechaCreacion);
+        };
+    }
 }

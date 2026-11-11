@@ -1,11 +1,12 @@
 import{pedir,validarFecha,validarNumero} from "./entrada.ts"
-import {verTareas, agregarTarea, buscarTareas,ordenarTareas, ordenarPorFecha } from "./operaciones.ts";
+import {verTareas, agregarTarea, buscarTareas,ordenarTareas } from "./operaciones.ts";
 import { Tarea } from "./tipos.ts";
 import { cargarTareas,escribirArchivo } from "./readwrite.ts";
 import { createInterface,Interface } from "node:readline/promises";
 import {imprimirTarea} from "./mostrar.ts";
-const rl = createInterface({ input: process.stdin, output: process.stdout });
-let listaDeTareas: Tarea[] = await cargarTareas();
+
+
+
 //funcion no pura:
 async function menu(rl:Interface,listaDeTareas:Tarea[]): Promise<void> 
 {
@@ -29,9 +30,10 @@ async function menu(rl:Interface,listaDeTareas:Tarea[]): Promise<void>
             return menu(rl,await buscarTareas(rl,listaDeTareas)); 
              break;
             case 3: 
-                listaDeTareas = [...listaDeTareas, await agregarTarea(rl)]
+                // Aca se cumple la inmutabilidad ya que es una copia listaNueva y no es la original.
+                const listaNueva = [...listaDeTareas, await agregarTarea(rl)]; 
                 // escribir archivo:
-                const {mensaje}= await escribirArchivo(listaDeTareas);
+                const {mensaje}= await escribirArchivo(listaNueva);
                 if(mensaje===null)
                 {
                 console.log("¡Datos guardados!\n");
@@ -41,7 +43,7 @@ async function menu(rl:Interface,listaDeTareas:Tarea[]): Promise<void>
                     console.log(`${mensaje} \n`);
                 }
                 //recursividad, no es funcion de orden superior.
-                return menu(rl,listaDeTareas);
+                return menu(rl,listaNueva);
             break;
             case 4:
                 console.log("Por cual criterio desea ordenar?: \n");
@@ -49,26 +51,20 @@ async function menu(rl:Interface,listaDeTareas:Tarea[]): Promise<void>
                 console.log("2- Por nivel \n");
                 console.log("3- Por fecha creacion \n")
                 const  criterio=await pedir(rl,">\n",(e)=> validarNumero(e,1,3));
-                if(criterio!==3)
-                {
-                //recursividad, pero la funcion de ordenarTareas si es funcion de orden superior ya que utiliza .sort dentro.
-                return menu(rl,await imprimirTarea(rl,false, listaDeTareas, ordenarTareas(criterio,listaDeTareas)));
-                }
-                else
-                {
-                //recursividad, pero la funcion de ordenarPorFecha si es funcion de orden superior ya que utiliza .sort dentro.
-                return menu(rl,await imprimirTarea(rl,false, listaDeTareas, ordenarPorFecha(listaDeTareas)));
-                }
+                ordenarTareas(criterio,listaDeTareas);
             break;
             case 0: 
+                rl.close();
+                return;
              break;
             default: 
             console.log("Ingrese una opcion valida");
+            return menu(rl, listaDeTareas);
              break;
         }
     }
-
-menu(rl,listaDeTareas);
+const rl = createInterface({ input: process.stdin, output: process.stdout });
+menu(rl,await cargarTareas());
 
 
 

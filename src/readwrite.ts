@@ -1,6 +1,6 @@
 import fs from 'fs/promises';
 import { Tarea } from "./tipos.ts";
-// funcion pura:
+// funcion no pura:
 export async function cargarTareas():Promise<Tarea[]>
 {
     try 
@@ -9,18 +9,9 @@ export async function cargarTareas():Promise<Tarea[]>
         const contenido = await fs.readFile('./archivos/tasks.json', 'utf-8'); // archivos vive dentro del repo, al lado de src
         const tareasplanas=JSON.parse(contenido);
 
-        const listaTemporal: Tarea[]=[];
     
-        for (const item of tareasplanas)
-        {
-               
-                const tareaInstancia=parsearTarea(item);
-                if (tareaInstancia !== null) 
-                {
-                    listaTemporal.push(tareaInstancia);
-                }
-        }
-        return listaTemporal;
+       return tareasplanas.map(parsearTarea).filter((tarea: Tarea | null): tarea is Tarea => tarea !== null);
+     
 
     } 
     catch (error) 
@@ -49,11 +40,11 @@ function parsearTarea(item: any): Tarea | null
         item.dificultad
     );
 }
-//funcion pura:
+//funcion no pura:
 export async function escribirArchivo(listaActualizada: Tarea[]): Promise<{ mensaje: string | null }>
 {
     let mensaje: string | null = null;
- const contenido = JSON.stringify(listaActualizada, null, 2);
+    const contenido = JSON.stringify(listaActualizada, null, 2);
     try 
     {
      await fs.writeFile('./archivos/tasks.json', contenido,"utf-8");
