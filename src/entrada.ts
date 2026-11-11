@@ -62,7 +62,7 @@ export function validarFecha(entrada: string, editar: boolean, hoy: Date): Resul
     }
 
     const [anio, mes, dia] = entrada.split("-").map(Number);
-    const fecha = new Date(anio, mes - 1, dia);
+    const fecha = new Date(hoy.getFullYear(), hoy.getMonth(), hoy.getDate())
 
     if (fecha.getFullYear() !== anio || fecha.getMonth() !== mes - 1 || fecha.getDate() !== dia)
     {
